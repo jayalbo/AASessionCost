@@ -1,8 +1,25 @@
 # AASessionCost
 
+```
+$ npm i
+$ npm run start
+```
+queryString parameters (required):
+- appId: string
+- callId: string
+- startTime: int
+- endTime: int
 
-.env
 
+E.g.:
+```
+http://localhost:8888/?appId=123&callId=456&startTime=1617222000&endTime=1617225600
+```
+
+
+Environment variables:
+
+```
 AUTH_TOKEN=AGORA_BASIC_AUTH_TOKEN
 LABEL_VIDEO_HD=HD Video
 COST_VIDEO_HD=3.99
@@ -17,3 +34,4 @@ LABEL_VIDEO_2KPLUS=2K+ Video
 COST_VIDEO_2KPLUS=35.99
 THRESHOLD_VIDEO_2KPLUS=3686400
 PORT=8888
+```
