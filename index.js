@@ -12,6 +12,7 @@ app.get("/", async (req, res) => {
   let speakers = [];
   let totalCost = 0;
   let aggregatedResolution = 0;
+  const disclaimer = `This estimate is based on audience session duration (not subscription). Actual costs may vary based on usage.`;
 
   if (!appId || !callId || !startTime || !endTime) {
     return res.status(400).send("Missing query parameters");
@@ -196,6 +197,7 @@ app.get("/", async (req, res) => {
       aggregated_resolution: aggregatedResolution,
       pricing_tier: labelTier,
       total_cost: parseFloat(totalCost.toFixed(2)),
+      disclaimer,
     };
 
     res.status(200).send(responseObj);
