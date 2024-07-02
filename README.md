@@ -9,6 +9,7 @@ queryString parameters (required):
 - callId: string
 - startTime: int
 - endTime: int
+- multiHost: boolean (optional)
 
 
 E.g.:
