@@ -21,7 +21,7 @@ app.get("/", async (req, res) => {
   const config = {
     baseURL: "https://api.agora.io/beta/analytics",
     headers: {
-      Authorization: `Basic ${process.env.AUTH_TOKEN}`,
+      Authorization: `Basic ${btoa(`${process.env.CUSTOMER_ID}:${process.env.CUSTOMER_SECRET}`)}`,
       "Content-Type": "application/json",
     },
   };
@@ -47,6 +47,7 @@ app.get("/", async (req, res) => {
             },
           }),
         );
+
         const data = response.data;
         allCallInfo = allCallInfo.concat(data.call_info);
         console.log(
@@ -134,8 +135,8 @@ app.get("/", async (req, res) => {
             const filteredData = speakerData.data.filter(
               (item) => item.mid === 20027 || item.mid === 20028,
             );
-            let maxWidth = -Infinity;
-            let maxHeight = -Infinity;
+            let maxWidth = 0;
+            let maxHeight = 0;
 
             filteredData.forEach((item) => {
               if (item.mid === 20027) {
@@ -161,10 +162,7 @@ app.get("/", async (req, res) => {
                 speaker_resolution: {
                   width: maxWidth,
                   height: maxHeight,
-                  // aggregated_resolution: aggregatedResolution,
-                  // tier: labelTier,
                 },
-                // cost: parseFloat(cost.toFixed(2)),
               };
             }
           }
@@ -188,7 +186,6 @@ app.get("/", async (req, res) => {
     }
 
     totalCost = (pricingTier * totalMinutes) / 1000;
-    console.log(pricingTier, totalMinutes);
     responseObj = {
       ...responseObj,
       query_duration: `${((Date.now() - queryStartTime) / 1000).toFixed(2)}s`,
