@@ -1,27 +1,32 @@
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get("/", async (req, res) => {
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// API endpoint for analytics
+app.get("/api/analytics", async (req, res) => {
   let totalQueries = 0;
   let queryStartTime = Date.now();
-  const { appId, callId, startTime, endTime, multiHost = false } = req.query;
+  const { appId, callId, startTime, endTime, multiHost = false, customerId, customerSecret } = req.query;
   let speakers = [];
   let totalCost = 0;
   let aggregatedResolution = 0;
   const disclaimer = `This estimate is based on audience session duration (not subscription). Actual costs may vary based on usage.`;
 
-  if (!appId || !callId || !startTime || !endTime) {
-    return res.status(400).send("Missing query parameters");
+  if (!appId || !callId || !startTime || !endTime || !customerId || !customerSecret) {
+    return res.status(400).json({ error: "Missing query parameters" });
   }
 
   const config = {
     baseURL: "https://api.agora.io/beta/analytics",
     headers: {
-      Authorization: `Basic ${btoa(`${process.env.CUSTOMER_ID}:${process.env.CUSTOMER_SECRET}`)}`,
+      Authorization: `Basic ${Buffer.from(`${customerId}:${customerSecret}`).toString('base64')}`,
       "Content-Type": "application/json",
     },
   };
@@ -197,14 +202,24 @@ app.get("/", async (req, res) => {
       disclaimer,
     };
 
-    res.status(200).send(responseObj);
+    res.status(200).json(responseObj);
   } catch (error) {
-    res.status(500).send(`An error occurred: ${error.message}`);
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
+});
+
+// Redirect root to index.html
+app.get("/", (req, res) => {
+  if (Object.keys(req.query).length === 0) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    // If there are query parameters, handle them through the API
+    res.redirect(`/api/analytics?${new URLSearchParams(req.query).toString()}`);
   }
 });
 
 app.listen(port, () => {
-  console.log(`Listening on ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
 
 async function exponentialBackoff(fn, maxRetries = 5, initialDelay = 1000) {
