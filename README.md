@@ -1,4 +1,49 @@
-# AASessionCost
+# AA Session Cost Calculator
+
+A web application to calculate session costs for AA meetings. This tool helps track and analyze the costs associated with AA sessions, including speaker identification and duration.
+
+## Features
+
+- Dark mode support with persistent theme preference
+- Customer authentication
+- Session cost calculation
+- Speaker identification and tracking
+- Multi-host support
+- Responsive design
+- Date and time picker integration
+
+## Usage
+
+1. Enter your Customer ID and Secret
+2. Provide the App ID and Call ID
+3. Select the start and end times
+4. Toggle Multi Host if needed
+5. Click "Calculate Cost" to see the results
+
+## Development
+
+This is a standalone web application that can be deployed to GitHub Pages. The application uses:
+
+- HTML5
+- CSS3 (with Tailwind CSS)
+- JavaScript (ES6+)
+- Flatpickr for date/time picking
+
+## Deployment
+
+The application is automatically deployed to GitHub Pages using GitHub Actions. Any push to the main branch will trigger a new deployment.
+
+## API Integration
+
+To integrate with the actual API:
+
+1. Update the API endpoint in the JavaScript code
+2. Ensure CORS is properly configured
+3. Update the authentication headers as needed
+
+## License
+
+MIT License - feel free to use this code for your own projects.
 
 ```
 $ npm i
