@@ -194,7 +194,11 @@
                 }
 
                 try {
-                    const response = await fetch(`/api/analytics?${params.toString()}`);
+                    // Determine if we're in development or production
+                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    const apiUrl = isLocalhost ? '/api/analytics' : '/.netlify/functions/analytics';
+                    
+                    const response = await fetch(`${apiUrl}?${params.toString()}`);
                     const data = await response.json();
                     
                     // Update results
